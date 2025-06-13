@@ -24,7 +24,7 @@ public class controladorPrestamos {
 
     @Autowired
     private servicioPrestamos servicioPrestamos;
-
+    @Operation(summary = "Obtener todos los préstamos", description = "Retorna una lista de todos los préstamos realizados")
     @GetMapping
     public CollectionModel<EntityModel<prestamos>> obtenerTodos() {
         List<EntityModel<prestamos>> prestamosConLinks = servicioPrestamos.listarPrestamos().stream()
@@ -38,6 +38,8 @@ public class controladorPrestamos {
                 linkTo(methodOn(controladorPrestamos.class).obtenerTodos()).withSelfRel());
     }
 
+
+    @Operation(summary = "Obtener préstamo por ID", description = "Retorna el préstamo mediante su ID")
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<prestamos>> obtenerPorId(@PathVariable Long id) {
         Optional<prestamos> prestamo = servicioPrestamos.listarPrestamo(id);
@@ -50,6 +52,8 @@ public class controladorPrestamos {
         return ResponseEntity.notFound().build();
     }
 
+
+    @Operation(summary = "Obtener préstamo por ID usuario", description = "Retorna una lista de los préstamos realizados por un usuario")
     @GetMapping("/usuarios/{id_usuario}")
     public CollectionModel<EntityModel<prestamos>> obtenerPorUsuario(@PathVariable Long id_usuario) {
         List<EntityModel<prestamos>> prestamosConLinks = servicioPrestamos.listarPrestamosPorUsuario(id_usuario).stream()
@@ -65,6 +69,8 @@ public class controladorPrestamos {
                 linkTo(methodOn(controladorPrestamos.class).obtenerTodos()).withRel("todos-prestamos"));
     }
 
+
+    @Operation(summary = "Obtener préstamos por ID libro", description = "Retorna una lista de todos los préstamos que ha tenido un libro mediante la ID del libro")
     @GetMapping("/libros/{id_libro}")
     public CollectionModel<EntityModel<prestamos>> obtenerPorLibro(@PathVariable Long id_libro) {
         List<EntityModel<prestamos>> prestamosConLinks = servicioPrestamos.listarPrestamosPorLibro(id_libro).stream()
@@ -80,6 +86,8 @@ public class controladorPrestamos {
                 linkTo(methodOn(controladorPrestamos.class).obtenerTodos()).withRel("todos-prestamos"));
     }
 
+
+    @Operation(summary = "Generar préstamo", description = "Genera un préstamo a un usuario utilizando su ID y la ID del libro a prestar")
     @PostMapping("/prestar")
     public ResponseEntity<?> crearPrestamo(@RequestParam Long id_usuario,
                                            @RequestParam Long id_libro,
@@ -97,6 +105,8 @@ public class controladorPrestamos {
         }
     }
 
+
+    @Operation(summary = "Devolver libro", description = "Utilizando la ID se hace la devolución de un libro y se elimina de la lista de préstamos")
     @PutMapping("/{id}/devolver")
     public ResponseEntity<?> devolverLibro(@PathVariable Long id) {
         try {
@@ -112,6 +122,8 @@ public class controladorPrestamos {
         }
     }
 
+
+ 
     @PutMapping("/actualizar-vencidos")
     public ResponseEntity<?> actualizarVencidos() {
         servicioPrestamos.actualizarPrestamosSobreDiaDeVencimiento();
@@ -120,6 +132,7 @@ public class controladorPrestamos {
         return ResponseEntity.ok(respuesta);
     }
 
+    @Operation(summary = "Eliminar ID de préstamo", description = "Utilizando la ID del préstamo generado, se hace la eliminación de este mismo, borrando así tanto el préstamo como el registro de que existió.")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarPrestamo(@PathVariable Long id) {
         try {
