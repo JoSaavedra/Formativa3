@@ -37,7 +37,8 @@ public class controladorLibros {
     public controladorLibros(servicioLibros servicioLibros) {
         this.servicioLibros = servicioLibros;
     }
-
+    
+    
     @Operation(summary = "Obtener todos los valores de los libros", description = "Retorna una lista de todos los libros disponibles")
     @GetMapping
     public List<libros> getAll(){
@@ -60,10 +61,13 @@ public class controladorLibros {
 
         return ResponseEntity.notFound().build();
     }
+
+    @Operation(summary = "Guardar o actualizar los libros", description = "Se guarda o actualiza la cantidad de libros que haya sido modificada")
     @PostMapping
     public void guardarActualizar(@RequestBody libros libros){
         servicioLibros.guardarOActualizar(libros);
     }
+    @Operation(summary = "Eliminar un libro", description = "Se elimina el libro seleccionado mediante su ID.")
     @DeleteMapping("/{id_libro}")
     public void delete(@PathVariable("id_libro") Long id_libro){
         servicioLibros.borrar(id_libro);
