@@ -33,6 +33,8 @@ public class controladorUsuarios {
         this.servicioUsuarios = servicioUsuarios;
     }
 
+
+    @Operation(summary = "Listar todos los usuarios", description = "Retorna una lista de todos los usuarios existentes en la lista")
     @GetMapping
     public CollectionModel<EntityModel<usuarios>> getAll() {
         List<EntityModel<usuarios>> usuariosConLinks = servicioUsuarios.listarUsuarios().stream()
@@ -46,6 +48,8 @@ public class controladorUsuarios {
                 linkTo(methodOn(controladorUsuarios.class).getAll()).withSelfRel());
     }
 
+
+    @Operation(summary = "Listar un usuario", description = "Utilizando la ID de un usuario, se listan todos sus datos")
     @GetMapping("/{id_usuario}")
     public ResponseEntity<EntityModel<usuarios>> getBId(@PathVariable("id_usuario") Long id_usuario) {
         Optional<usuarios> usuario = servicioUsuarios.listarUsuarios(id_usuario);
@@ -61,6 +65,8 @@ public class controladorUsuarios {
         return ResponseEntity.notFound().build();
     }
 
+
+    @Operation(summary = "Guardar o Actualizar usuario", description = "Mediante la ID de un usuario, se pueden guardar o actualizar sus datos.")
     @PostMapping
     public ResponseEntity<EntityModel<usuarios>> guardarActualizar(@RequestBody usuarios usuario) {
         servicioUsuarios.guardarOActualizar(usuario);
@@ -72,6 +78,8 @@ public class controladorUsuarios {
         return ResponseEntity.ok(usuarioConLinks);
     }
 
+
+    @Operation(summary = "Eliminar usuario", description = "Mediante la ID del usuario, se elimina.")
     @DeleteMapping("/{id_usuario}")
     public ResponseEntity<?> delete(@PathVariable("id_usuario") Long id_usuario) {
         servicioUsuarios.borrar(id_usuario);
